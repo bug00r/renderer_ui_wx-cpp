@@ -14,27 +14,16 @@ BUILDDIR?=$(BUILDROOT)/$(CXX)
 BUILDDIR_C?=$(BUILDROOT)/gcc
 BUILDPATH?=$(BUILDDIR)/
 
-INCLUDEDIR=-I. -I./../_third/wxw/include -I./../_third/wxw/lib/wx/include/msw-unicode-static-3.0 \
-			-I./../../c/collections/array/ -I./../../c/math/statistics/ -I./../../c/math/vec/ -I./../../c/math/mat/ -I./../../c/math/utils/ \
-			-I./../../c/math/algorithm/noise/ -I./../../c/math/algorithm/fractals/ -I./../../c/color -I./../../c/texture
+INCLUDEDIR=-I. -I/c/dev/include -I/c/dev/include/wx-3.2 -I/c/dev/lib/wx/include/msw-unicode-static-3.2 \
 
 SRC=renderer_ui_wx.cpp renderer_ui_app.h renderer_ui_app.cpp renderer_ui_main_frame.h renderer_ui_main_frame.cpp RenderbugPanel.h RenderbugPanel.cpp RenderbugPanelImpl.h RenderbugPanelImpl.cpp
 
 BIN=renderer_ui_wx.exe
-LIBS=-lwx_mswu_html-3.0  -lwx_mswu_core-3.0 -lwx_baseu-3.0 -lwxtiff-3.0 -lwxjpeg-3.0 -lwxpng-3.0 -lwxregexu-3.0 \
+#-lwxtiff-3.2 -lwxjpeg-3.2 -lwxpng-3.2 -lwxregexu-3.2
+LIBS=-lwx_mswu_html-3.2 -lwx_mswu_core-3.2 -lwx_baseu-3.2 \
 	-lpng -lz -lrpcrt4 -loleaut32 -lole32 -luuid -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -ladvapi32 -lwsock32 \
-	-lgdi32 -static -lstdc++ -ltexture -lfractals -lnoise -lcrgb_array -lfarray -larray -lcolor -lstatistics -lutilsmath -lmat -lvec
-LIBDIR= -L./../_third/wxw/lib \
-		-L./../../c/collections/array/$(BUILDDIR_C) \
-		-L./../../c/math/statistics/$(BUILDDIR_C) \
-		-L./../../c/math/utils/$(BUILDDIR_C) \
-		-L./../../c/math/mat/$(BUILDDIR_C) \
-		-L./../../c/math/vec/$(BUILDDIR_C) \
-		-L./../../c/math/algorithm/noise/$(BUILDDIR_C) \
-		-L./../../c/math/algorithm/fractals/$(BUILDDIR_C) \
-		-L./../../c/color/$(BUILDDIR_C) \
-		-L./../../c/texture/$(BUILDDIR_C) \
-		-L$(BUILDDIR)
+	-luxtheme -loleacc -lshlwapi -lgdi32 -static -lstdc++ -lbatkit -lversion
+LIBDIR= -L/c/dev/lib -L./$(BUILDDIR)
 
 all: createdir $(BUILDPATH)$(BIN)
 

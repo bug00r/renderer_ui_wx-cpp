@@ -22,22 +22,22 @@ void RenderPanel::canvas_paint( wxPaintEvent& event ) {
 	}
 }
 
-void RenderPanel::setTexture(texture_t * newtexture) {
+void RenderPanel::setTexture(Texture * newtexture) {
 	if(this->texture!=NULL) {
 		texture_free(this->texture);
 	}
 	this->texture = newtexture;
 }
 
-texture_t * RenderPanel::getTexture() {
+Texture * RenderPanel::getTexture() {
 	return this->texture;
 }
 
 void RenderPanel::render(wxAutoBufferedPaintDC& dc) {
 	std::cout << "render render" << std::endl;
 
-	cRGB_t * cref;
-	array_error_t array_res;
+	ColorRGB * cref;
+	ArrayError array_res;
 	
 	for (unsigned int h = 0; h < texture->height; ++h){
 	  for (unsigned int w = 0; w < texture->width; ++w){
@@ -297,7 +297,7 @@ void RenderbugPanelImpl::on_manipulation_changed( wxChoicebookEvent& event ) {
 	
 }
 
-void RenderbugPanelImpl::refresh_texture(texture_t *texture, int width, int height, bool setAsNew) {
+void RenderbugPanelImpl::refresh_texture(Texture *texture, int width, int height, bool setAsNew) {
 	if (setAsNew) {
 		canvas->setTexture(texture_copy(texture));
 		canvas->SetSize(wxSize(width,height));
@@ -305,7 +305,7 @@ void RenderbugPanelImpl::refresh_texture(texture_t *texture, int width, int heig
 	canvas->Refresh();
 }
 
-texture_t * RenderbugPanelImpl::create_new_texture(int width, int height) {
+Texture * RenderbugPanelImpl::create_new_texture(int width, int height) {
 	if (this->texture!=NULL) {
 		texture_free(this->texture);
 	}
@@ -319,10 +319,10 @@ void RenderbugPanelImpl::process_ds() {
 	int w = 513;
 	int h = w;
 	
-	texture_t * texture = this->create_new_texture(w,h);
-	noise_t * noise = noise_new(w, h);
+	Texture * texture = this->create_new_texture(w,h);
+	Noise * noise = noise_new(w, h);
 	
-	diamond_square_t ds_param;
+	DiamondSquare ds_param;
 	ds_param.noise = noise;
 	ds_param.length = w-1;
 	
@@ -335,7 +335,7 @@ void RenderbugPanelImpl::process_ds() {
 	
 	filter_noise_gauss(noise, 100.f);
 	
-	noise_to_texture( noise, texture);
+	Noiseo_texture( noise, texture);
 	
 	this->refresh_texture(texture, w, h);
 	
@@ -346,10 +346,10 @@ void RenderbugPanelImpl::process_md() {
 	int w = 513;
 	int h = w;
 	
-	texture_t * texture = this->create_new_texture(w,h);
-	noise_t * noise = noise_new(w, h);
+	Texture * texture = this->create_new_texture(w,h);
+	Noise * noise = noise_new(w, h);
 	
-	midpoint_displacement_t md_param;
+	MidpointDisplacement md_param;
 	md_param.noise = noise;
 	md_param.length = w-1;
 	
@@ -363,7 +363,7 @@ void RenderbugPanelImpl::process_md() {
 	
 	filter_noise_circle(noise, 0.9f);
 	
-	noise_to_texture( noise, texture);
+	Noiseo_texture( noise, texture);
 	
 	this->refresh_texture(texture, w, h);
 	
@@ -375,10 +375,10 @@ void RenderbugPanelImpl::process_evolution() {
 	int w = 513;
 	int h = w;
 	
-	texture_t * texture = this->create_new_texture(w,h);
-	noise_t * noise = noise_new(w, h);
+	Texture * texture = this->create_new_texture(w,h);
+	Noise * noise = noise_new(w, h);
 	
-	evolution_t ev_param;
+	Evolution ev_param;
 	ev_param.noise = noise;
 	ev_param.min_value=-1.f;
 	ev_param.max_value=2.f;
@@ -387,7 +387,7 @@ void RenderbugPanelImpl::process_evolution() {
 
 	create_evolution(&ev_param);
 	
-	noise_to_texture( noise, texture);
+	Noiseo_texture( noise, texture);
 	
 	this->refresh_texture(texture, w, h);
 	
@@ -401,8 +401,8 @@ void RenderbugPanelImpl::process_mandelbrot() {
 	int w = 512;
 	int h = w;
 	
-	mandelbrot_t *mb = mandelbrot_new(w, h);
-	texture_t * texture = this->create_new_texture(w,h);
+	Mandelbrot *mb = mandelbrot_new(w, h);
+	Texture * texture = this->create_new_texture(w,h);
 	
 	mb->minreal  = txtctrl_to_double_errormsg(this->mb_min_real, -2.0, true, "Invalid will set to value: -2.0", "Error min real");
 	mb->maxreal  = txtctrl_to_double_errormsg(this->mb_max_real, 0.5, true, "Invalid will set to value: 0.5", "Error max real");
@@ -412,7 +412,7 @@ void RenderbugPanelImpl::process_mandelbrot() {
 	
 	create_mandelbrot(mb);
 	
-	mandelbrot_to_texture(mb, texture, (mb_color_func)this->mb_color_model->GetClientData(this->mb_color_model->GetCurrentSelection()));
+	Mandelbroto_texture(mb, texture, (mb_color_func)this->mb_color_model->GetClientData(this->mb_color_model->GetCurrentSelection()));
 
 	this->refresh_texture(texture, w, h);
 	
@@ -423,9 +423,9 @@ void RenderbugPanelImpl::process_julia() {
 	int w = 512;
 	int h = w;
 	
-	texture_t * texture = this->create_new_texture(w,h);
+	Texture * texture = this->create_new_texture(w,h);
 	
-	julia_t *julia = julia_new(w, h);
+	Julia *julia = julia_new(w, h);
 	
 	julia->minreal  = txtctrl_to_double_errormsg(this->julia_min_real, -2.1, true, "Invalid will set to value: -2.1", "Error min real");
 	julia->maxreal  = txtctrl_to_double_errormsg(this->julia_max_real, 2.1, true, "Invalid will set to value: 2.1", "Error max real");	
@@ -446,7 +446,7 @@ void RenderbugPanelImpl::process_julia() {
 
 	create_julia(julia);
 
-	julia_to_texture(julia, texture, (jul_color_func)this->julia_color_model->GetClientData(this->julia_color_model->GetCurrentSelection()));
+	Juliao_texture(julia, texture, (jul_color_func)this->julia_color_model->GetClientData(this->julia_color_model->GetCurrentSelection()));
 	
 	this->refresh_texture(texture, w, h);
 	
@@ -473,7 +473,7 @@ void RenderbugPanelImpl::process_filter_standard(TriggerType filter_trigger_type
 	
 	filter_func filter = (filter_func)this->selected_filter->GetClientData(this->selected_filter->GetCurrentSelection());
 	
-	texture_t * used_texture = NULL;
+	Texture * used_texture = NULL;
 	
 	switch(filter_trigger_type) {
 		case SET: used_texture = texture_copy(this->texture);break;
@@ -514,7 +514,7 @@ void RenderbugPanelImpl::on_manipulator_add( wxCommandEvent& event ) {
 void RenderbugPanelImpl::process_brigthness_contrast(TriggerType filter_trigger_type) {
 	std::cout << "Brightness and contrast: " << filter_trigger_type << std::endl;
 	
-	texture_t * used_texture = NULL;
+	Texture * used_texture = NULL;
 	
 	switch(filter_trigger_type) {
 		case SET: used_texture = texture_copy(this->texture);break;
@@ -526,15 +526,15 @@ void RenderbugPanelImpl::process_brigthness_contrast(TriggerType filter_trigger_
 	double contrast = this->contrast->GetValue();
 	double brightness = this->brightness->GetValue();
 	
-	array_iterator_t * it = array_iterator_new(used_texture->buffer);
-	cRGB_t * curcolor;
-	cRGB_t temp;
+	ArrayIterator * it = array_iterator_new(used_texture->buffer);
+	ColorRGB * curcolor;
+	ColorRGB temp;
 	
 	float contrast_factor = crgb_contrast_factor_255(contrast);
 
 	while(array_iterator_has_next(it))
 	{
-		curcolor = (cRGB_t *)array_iterator_next(it);
+		curcolor = (ColorRGB *)array_iterator_next(it);
 		crgb_brightness_255_dest(&temp, curcolor, brightness);
 		crgb_contrast_255_dest(curcolor, &temp, contrast_factor);
 	}

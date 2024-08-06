@@ -16,7 +16,7 @@ extern "C" {
 class RenderPanel: public wxPanel 
 {
 	private:
-		texture_t * texture;
+		Texture * texture;
 
 	protected:
 		void canvas_paint( wxPaintEvent& event );
@@ -24,8 +24,8 @@ class RenderPanel: public wxPanel
 		void paintEvent(wxPaintEvent & evt);
         void paintNow();
  
-		void setTexture(texture_t * newtexture);
-		texture_t * getTexture();
+		void setTexture(Texture * newtexture);
+		Texture * getTexture();
 		
         void render(wxAutoBufferedPaintDC& dc);
 		
@@ -38,7 +38,7 @@ class RenderbugPanelImpl : public RenderbugPanel
 	private:
 		enum TriggerType { SET, ADD };
 		RenderPanel * canvas;
-		texture_t * texture;
+		Texture * texture;
 		int cur_algorithm;
 		int cur_filter;
 		int cur_manipulation;
@@ -49,19 +49,19 @@ class RenderbugPanelImpl : public RenderbugPanel
 		typedef float (*Average4Func)(float,float,float,float);
 		typedef float (*Average2Func)(float,float);
 		typedef float (*SeedReductionFunc)(float,float);
-		typedef void  (*mb_color_func)(const mandelbrot_t * mb, const mandelbrot_point_t * mbt, cRGB_t * col);
-		typedef void (*jul_color_func)(const julia_t * julia, const julia_point_t * jbt, cRGB_t * col);
+		typedef void  (*mb_color_func)(const Mandelbrot * mb, const MandelbrotPoint * mbt, ColorRGB * col);
+		typedef void (*jul_color_func)(const Julia * julia, const JuliaPoint * jbt, ColorRGB * col);
 		typedef float _Complex (*juliapolyfunc)(const float _Complex *cp, const float _Complex *c);
-		typedef void (*filter_func)(texture_t * texture, const unsigned int pxrange, const float factor);
+		typedef void (*filter_func)(Texture * texture, const unsigned int pxrange, const float factor);
 		float _Complex julia_constants[12];
 		
 		AlgorithmMemberFunc cur_algo_func;
 		FiltertypeMemberFunc cur_filtertype_func;
 		ManipulatorMemberFunc cur_manipulator_func;
 		
-		void refresh_texture(texture_t *texture, int width, int height, bool setAsNew = true);
+		void refresh_texture(Texture *texture, int width, int height, bool setAsNew = true);
 		double txtctrl_to_double_errormsg(wxTextCtrl* control, double default_value, bool shomsg, const wxString &message, const wxString &caption);
-		texture_t * create_new_texture(int width, int height);
+		Texture * create_new_texture(int width, int height);
 		
 		void process_ds();
 		void process_md();
